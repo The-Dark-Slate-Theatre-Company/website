@@ -39,12 +39,12 @@ export function Header() {
     <> 
       <div className={`select-none fixed z-100 top-0 w-full h-20 px-8 flex justify-center md:justify-between items-center border-b transition-all duration-500 ${bgClass}`}>
         
-        <div className={`group font-donau flex items-center gap-4 text-xl transition-all duration-500 delay-200 origin-left text-[#555] ${logoClass}`}>
-          <img src={logoAccent} className='w-20 opacity-40 md:hidden' />
+        <div className={`group font-donau flex items-center gap-2 md:gap-4 text-xl transition-all duration-500 delay-200 origin-left text-[#555] ${logoClass}`}>
+          <img src={logoAccent} className='w-16 opacity-40 md:hidden' />
           <h2 className='border-b not-md:hidden group-has-[h1:hover]:border-transparent transition-colors duration-500'>The</h2>
-          <h1 onClick={() => navigate('/')} className={`text-4xl text-white border-b border-transparent mt-px md:hover:border-white ${scrolled ? 'cursor-pointer' : ''} transition-colors`}>Dark Slate</h1>
+          <h1 onClick={() => navigate('/')} className={`text-3xl md:text-4xl text-white border-b border-transparent mt-px md:hover:border-white ${scrolled ? 'cursor-pointer' : ''} transition-colors`}>Dark Slate</h1>
           <h2 className='border-b not-md:hidden group-has-[h1:hover]:border-transparent transition-colors duration-500'>Theatre Company</h2>
-          <img src={logoAccent} className='w-20 opacity-40 rotate-180 md:hidden' />
+          <img src={logoAccent} className='w-16 opacity-40 rotate-180 md:hidden' />
         </div>
 
         <div className='flex items-center gap-12 not-md:hidden'>
