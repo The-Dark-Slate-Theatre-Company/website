@@ -1,0 +1,37 @@
+{
+  "general": {
+    "name": "General Enquiry",
+    "colour": "#e67e22",
+    "info": "For reaching out and saying hello, and any questions you might have"
+  },
+
+  "accessibility": {
+    "name": "Accessibility Enquiry",
+    "colour": "#fd79a8",
+    "info": "We strive to ensure that our performance and rehearsal spaces are as accessible as possible. Feel free to reach out for more information"
+  },
+
+  "collaborate": {
+    "name": "Collaboration Proposal",
+    "colour": "#1abc9c",
+    "info": "Interested in working with us? We're always keen to hear from performers, creatives, theatre companies, and organisations who share our passion for storytelling. We're currently open to collaborations in the London, York, and Manchester areas"
+  },
+
+  "hire": {
+    "name": "Hire Request",
+    "colour": "#3498db",
+    "info": "We have a selection of 1920s costumes and props available for hire. Get in touch to discuss availability, pricing, and specific requirements"
+  },
+
+  "press": {
+    "name": "Press & Media Enquiry",
+    "colour": "#9b59b6",
+    "info": "For interviews, media requests, promotional materials, photography, or information about upcoming productions, please contact us here"
+  },
+
+  "other": {
+    "name": "Other",
+    "colour": "#ecf0f1",
+    "info": "Not sure which category your enquiry falls under? Select this option and we'll make sure it reaches the right person"
+  }
+}

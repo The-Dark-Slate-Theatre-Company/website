@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #d5a33c;
+
+  background-color: #000;
+  color: #fff;
+
+  font-family: 'Afacad', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+@font-face {
+  font-family: "Donau";
+  src: url("./assets/fonts/donau/donau.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Afacad';
+  src: url('./assets/fonts/afacad/Afacad-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Afacad';
+  src: url('./assets/fonts/afacad/Afacad-Bold.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Afacad';
+  src: url('./assets/fonts/afacad/Afacad-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+.font-donau {
+  text-transform: uppercase;
+  font-family: "Donau", serif;
+}
+
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
+  }
+}
