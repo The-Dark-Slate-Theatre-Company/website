@@ -59,7 +59,7 @@ export function Inbox() {
                     : <MailOpen size={25} style={{color: m.category.colour}} />
                   }
                   <p className='text-[#aaa] text-nowrap overflow-hidden text-ellipsis'>{m.name}</p>
-                  <p className='text-nowrap overflow-hidden text-ellipsis'><span style={{color: m.category.colour}}>[{m.category.name}]</span> {m.subject}</p>
+                  <p className='text-nowrap overflow-hidden text-ellipsis'><span className='mr-2' style={{color: m.category.colour}}>[{m.category.name[0]}]</span> {m.subject}</p>
                   <p className='not-md:hidden text-nowrap overflow-hidden text-ellipsis text-[#999] text-sm'>{m.message}</p>
                   <p className='not-md:hidden text-end'>{m.date}</p>
                 </div>

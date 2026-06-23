@@ -10,6 +10,8 @@ import { Portal } from './pages/admin/portal/Portal'
 import { Inbox } from './pages/admin/inbox/Inbox'
 import { MessageViewer } from './pages/admin/inbox/MessageViewer'
 import { Bio } from './pages/admin/bio/Bio'
+import { Changelog } from './pages/admin/changelog/Changelog'
+import { Resources } from './pages/admin/resources/Resources'
 
 function App() {
 
@@ -24,14 +26,16 @@ function App() {
         <Route path='/contact' element={<Contact />} />
       </Route>
 
-      {/* BACK PAGES */}
+      {/* BACK PAGES - SORT ALPHABETICALLY */}
       <Route path='/login' element={<Login />} />
 
       <Route path='/admin' element={<AdminLayout showNav={false} />} >
         <Route index element={<Portal />} />
-        <Route path='/admin/bio' element={<Bio />} />
+        <Route path='/admin/changelog' element={<Changelog />} />
         <Route path='/admin/inbox' element={<Inbox />} />
         <Route path='/admin/inbox/*' element={<MessageViewer />} />
+        <Route path='/admin/my-bio' element={<Bio />} />
+        <Route path='/admin/resources' element={<Resources />} />
       </Route>
 
     </Routes>

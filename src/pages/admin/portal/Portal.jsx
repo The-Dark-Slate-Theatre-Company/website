@@ -2,6 +2,7 @@ import MyBio from '../../../assets/graphics/admin-portal-icons/my-bio.png';
 import Inbox from '../../../assets/graphics/admin-portal-icons/inbox.png';
 import Productions from '../../../assets/graphics/admin-portal-icons/productions.png';
 import Resources from '../../../assets/graphics/admin-portal-icons/resources.png';
+import WebsiteChangelog from '../../../assets/graphics/admin-portal-icons/website-changelog.png';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,12 @@ export function Portal() {
       </TabCardSection>
 
       <TabCardSection label='Site Controls'>
-        <TabCard label='My Bio' to='/bio' src={MyBio} />
+        <TabCard label='My Bio' to='/my-bio' src={MyBio} />
+        <TabCard label='Resources' to='/resources' src={Resources} />
+      </TabCardSection>
+
+      <TabCardSection label='Other'>
+        <TabCard label='Changelog' to='/changelog' src={WebsiteChangelog} />
       </TabCardSection>
 
     </div>

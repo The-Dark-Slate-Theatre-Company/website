@@ -31,7 +31,7 @@ export function Contact() {
         </div>
 
         <p className='text-lg tracking-wide'>
-          For more formal inquiries, we recommend emailing us directly at <a href='mailto:darkslatetheatre@gmail.com' className='text-(--accent) underline hover:brightness-80 cursor-pointer transition-colors'>darkslatetheatre@gmail.com</a>
+          For more formal inquiries, we recommend emailing us directly at <a href='mailto:admin@darkslatetheatre.com' className='text-(--accent) underline hover:brightness-80 cursor-pointer transition-colors'>admin@darkslatetheatre.com</a>
         </p>
 
         <ContactForm />

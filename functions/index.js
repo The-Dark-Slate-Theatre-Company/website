@@ -44,14 +44,14 @@ Hi ${name},
 
 Thank you for reaching out. This email is to confirm that your message has been received, and we will get back to you via email soon.
 
-If you have any further requests, feel free to get in touch at darkslatetheatre@gmail.com
+If you have any further requests, feel free to get in touch at admin@darkslatetheatre.com
 
 
 All the best,
 The Dark Slate Theatre Company
 
 
-(This is an automated email address. Please do not respond, as your message will not be seen)
+(This is an automated email. Please do not respond, as your message will not be seen)
       `
     },
   });

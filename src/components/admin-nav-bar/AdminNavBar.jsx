@@ -22,10 +22,13 @@ export function AdminNavBar() {
         path.map((p, i) => {
           const last = !(i < path.length - 1);
           const textClass = `${last ? 'select-none border-transparent' : 'hover:text-white border-[#333] hover:border-white cursor-pointer transition-colors'} -mt-2 text-[#aaa] border-b-2 px-1`
-          const shortP = p.length > 8 ? `${p.substring(0, 8)}...` : p;
+
+          const longP = p.replaceAll('-', ' ');
+          const shortP = longP.length > 8 ? `${p.substring(0, 8).trimEnd()}...` : p;
+
           return (
             <div key={i} onClick={() => handleNavigate(i)} className='flex gap-4 items-center'>
-              <p className={`${textClass} not-md:hidden`}>{p}</p>
+              <p className={`${textClass} not-md:hidden`}>{longP}</p>
               <p className={`${textClass} md:hidden`}>{shortP}</p>
               {!last ? <ChevronRight size={20} className='text-[#777] -mt-2' /> : null}
             </div>

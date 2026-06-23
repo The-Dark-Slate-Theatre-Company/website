@@ -1,0 +1,18 @@
+{
+  "0.2.0": {
+    "date": "23/06/2026",
+    "changes": [
+      "Added Resources and Changelog to backpages.",
+      "Contact emails now come from admin@darkslatetheatre.com.",
+      "Changed internal name for 'Bio' backpage to 'My Bio'."
+    ]
+  },
+  "0.1.0": {
+    "date": "21/06/2026",
+    "changes": [
+      "New Dark Slate site launched at temporary GitHub address.",
+      "Home, About & Contact pages available on frontpages.",
+      "Inbox and My Bio available in admin backpages."
+    ]
+  }
+}
