@@ -24,7 +24,7 @@ export function AdminNavBar() {
           const textClass = `${last ? 'select-none border-transparent' : 'hover:text-white border-[#333] hover:border-white cursor-pointer transition-colors'} -mt-2 text-[#aaa] border-b-2 px-1`
 
           const longP = p.replaceAll('-', ' ');
-          const shortP = longP.length > 8 ? `${p.substring(0, 8).trimEnd()}...` : p;
+          const shortP = longP.length > 8 ? `${longP.substring(0, 8).trimEnd()}...` : longP;
 
           return (
             <div key={i} onClick={() => handleNavigate(i)} className='flex gap-4 items-center'>

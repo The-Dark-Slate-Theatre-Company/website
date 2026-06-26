@@ -1,17 +1,13 @@
+import AddressBook from '../../../assets/graphics/admin-portal-icons/address-book.png';
 import MyBio from '../../../assets/graphics/admin-portal-icons/my-bio.png';
 import Inbox from '../../../assets/graphics/admin-portal-icons/inbox.png';
+import Inventory from '../../../assets/graphics/admin-portal-icons/inventory.png';
 import Productions from '../../../assets/graphics/admin-portal-icons/productions.png';
 import Resources from '../../../assets/graphics/admin-portal-icons/resources.png';
-import WebsiteChangelog from '../../../assets/graphics/admin-portal-icons/website-changelog.png';
+import WebsiteChangelog from '../../../assets/graphics/admin-portal-icons/changelog.png';
 
 
 import { useNavigate } from 'react-router-dom';
-
-
-/**
- *  <TabCard label='Productions' to='/productions' src={Productions} />
-    <TabCard label='Resources' to='/resources' src={Resources} />
- */
 
 
 export function Portal() {
@@ -19,6 +15,7 @@ export function Portal() {
     <div className='w-full flex flex-col gap-8'>
 
       <TabCardSection label='Admin'>
+        <TabCard label='Address Book' to='/address-book' src={AddressBook} />
         <TabCard label='Inbox' to='/inbox' src={Inbox} />
       </TabCardSection>
 

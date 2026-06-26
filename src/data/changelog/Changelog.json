@@ -1,4 +1,12 @@
 {
+  "0.3.0": {
+    "date": "26/06/2026",
+    "changes": [
+      "Added Address Book to backpages.",
+      "Logging in now takes you to the page you were trying to access, rather than always going to '/admin'.",
+      "Simplified backpage icons."
+    ]
+  },
   "0.2.0": {
     "date": "23/06/2026",
     "changes": [

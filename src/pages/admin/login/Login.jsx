@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { auth } from "../../../firebase";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 
 export function Login() {
@@ -8,12 +8,16 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || '/admin';
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigate("/admin", { replace: true });
+        navigate(from, { replace: true });
       }
     });
     return () => unsubscribe();
@@ -25,7 +29,7 @@ export function Login() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      if(user) navigate('/admin');
+      if(user) navigate(from, {replace: true});
       else {
         alert('Username or password is incorrect.');
         setSubmitting(false);

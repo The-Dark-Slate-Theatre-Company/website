@@ -12,6 +12,9 @@ import { MessageViewer } from './pages/admin/inbox/MessageViewer'
 import { Bio } from './pages/admin/bio/Bio'
 import { Changelog } from './pages/admin/changelog/Changelog'
 import { Resources } from './pages/admin/resources/Resources'
+import { AddressBook } from './pages/admin/address-book/AddressBook'
+import { AddressContact } from './pages/admin/address-book/AddressContact'
+import { AddressContactEditor } from './pages/admin/address-book/AddressContactEditor'
 
 function App() {
 
@@ -31,6 +34,9 @@ function App() {
 
       <Route path='/admin' element={<AdminLayout showNav={false} />} >
         <Route index element={<Portal />} />
+        <Route path='/admin/address-book' element={<AddressBook />} />
+        <Route path='/admin/address-book/new-contact' element={<AddressContactEditor />} />
+        <Route path='/admin/address-book/*' element={<AddressContact />} />
         <Route path='/admin/changelog' element={<Changelog />} />
         <Route path='/admin/inbox' element={<Inbox />} />
         <Route path='/admin/inbox/*' element={<MessageViewer />} />

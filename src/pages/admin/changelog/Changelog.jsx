@@ -3,7 +3,7 @@ import log from '../../../data/changelog/Changelog.json';
 
 export function Changelog() {
   return (
-    <div className='flex flex-col gap-8'>
+    <div className='flex flex-col gap-8 pb-12'>
       <h1 className='mt-6 -mb-6 opacity-40'>[Current]</h1>
       {
         Object.keys(log).map((version, i) => {

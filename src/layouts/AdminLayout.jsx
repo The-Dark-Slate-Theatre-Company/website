@@ -43,7 +43,7 @@ export function AdminLayout() {
 
 
   useEffect(() => {
-    if(!checkingAuth && (!user || !publicUser)) navigate('/login', {replace: true});
+    if(!checkingAuth && (!user || !publicUser)) navigate('/login', {replace: true, state: { from: location }});
   }, [checkingAuth, user, publicUser, navigate]);
 
 

@@ -3,10 +3,14 @@ import { BackpageDescription } from "../../../components/admin-backpage-descript
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { DependentContent } from "../../../components/admin-dependent-content/DependentContent";
-import { Eye, GripHorizontal, Link, PlusCircle, Tag, Trash2, X } from "lucide-react";
+import { Eye, Link, Tag, X } from "lucide-react";
 import { AnimatePresence, motion, Reorder } from "motion/react";
 import { Footer } from "../../../components/footer/Footer";
 import { SaveButton } from "../../../components/admin-save-button/SaveButton";
+import { IconInput } from "../../../components/admin-draggable-list/IconInput";
+import { DraggableList } from "../../../components/admin-draggable-list/DraggableList";
+import { DraggableListItem } from "../../../components/admin-draggable-list/DraggableListItem";
+import { AddListItemButton } from "../../../components/admin-draggable-list/AddListItemButton";
 
 
 export function Resources() {
@@ -21,7 +25,7 @@ export function Resources() {
 
   const handleSave = async() => {
     setSaving(true);
-    
+
     // Check all resources have a name and link
     resources.forEach((r) => {
       if(!r.name.trim().length || !r.link.trim().length) {
@@ -88,7 +92,7 @@ export function Resources() {
       <DependentContent dependency={resources}>
         {
           resources && 
-          <> 
+          <div className='pb-24'> 
             <AnimatePresence>
               {
                 previewOpen && 
@@ -118,14 +122,22 @@ export function Resources() {
               </div>
             </div>
 
-            <div onClick={addResource} className='w-30 mt-6 mb-3 text-sm flex items-center gap-2 cursor-pointer text-[#999] hover:text-white transition-colors'>
-              <PlusCircle size={20} />
-              Add Resource
-            </div>
+            <AddListItemButton onClick={addResource}>Add Resource</AddListItemButton>
 
-            <ResourcesList resources={resources} updateResource={updateResource} deleteResource={deleteResource} setResources={setResources} setEdited={setEdited} />
+            <DraggableList values={resources} onReorder={(e) => {setResources(e); setEdited(true);}}>
+              {
+                resources.map((r, i) => 
+                  <DraggableListItem key={r.uid} value={r} onDelete={() => deleteResource(r.uid)} >
+                    <div className='grid md:grid-cols-[2fr_3fr] lg:grid-cols-[1fr_3fr] gap-3'>
+                      <IconInput icon={<Tag size={18} />} placeholder='Name' value={r.name} onChange={(e) => updateResource(r.uid, 'name', e.target.value)} />
+                      <IconInput icon={<Link size={18} />} placeholder='Link' value={r.link} onChange={(e) => updateResource(r.uid, 'link', e.target.value)} />
+                    </div>
+                  </DraggableListItem>
+                )
+              }
+            </DraggableList>
 
-          </>
+          </div>
         }
       </DependentContent>
       <SaveButton visible={edited} saving={saving} handleSave={handleSave} />
@@ -142,7 +154,7 @@ function ResourcesList({resources, updateResource, deleteResource, setResources,
       axis='y'
       values={resources}
       onReorder={(e) => {setResources(e); setEdited(true)}}
-      className='flex flex-col gap-3 pb-20'
+      className='flex flex-col gap-3 pb-24'
     >
       { resources.map((r, i) => 
         <Reorder.Item 
@@ -152,8 +164,8 @@ function ResourcesList({resources, updateResource, deleteResource, setResources,
         >
           <GripHorizontal className='cursor-grab text-[#aaa]' />
           <div className='grid md:grid-cols-[2fr_3fr] lg:grid-cols-[1fr_3fr] gap-3'>
-            <ResourceInput icon={<Tag size={18} />} placeholder='Name' value={r.name} onChange={(e) => updateResource(r.uid, 'name', e.target.value)} />
-            <ResourceInput icon={<Link size={18} />} placeholder='Link' value={r.link} onChange={(e) => updateResource(r.uid, 'link', e.target.value)} />
+            <IconInput icon={<Tag size={18} />} placeholder='Name' value={r.name} onChange={(e) => updateResource(r.uid, 'name', e.target.value)} />
+            <IconInput icon={<Link size={18} />} placeholder='Link' value={r.link} onChange={(e) => updateResource(r.uid, 'link', e.target.value)} />
           </div>
           <div className='flex justify-end items-center'>
             <Trash2 onClick={() => deleteResource(r.uid)} size={20} className='text-[#aaa] cursor-pointer hover:text-[#e74c3c] transition-colors' />
@@ -161,15 +173,5 @@ function ResourcesList({resources, updateResource, deleteResource, setResources,
         </Reorder.Item>
       )}
     </Reorder.Group>
-  )
-}
-
-
-function ResourceInput({icon, value, onChange, placeholder}) {
-  return (
-    <div className='w-full flex items-center gap-4 bg-[#050505] px-2 py-1'>
-      <div className='text-[#555]'>{icon}</div>
-      <input placeholder={placeholder} className='w-full focus:text-(--accent) focus:outline-none transition-colors' value={value} onChange={onChange} placeholder={placeholder} />
-    </div>
   )
 }
