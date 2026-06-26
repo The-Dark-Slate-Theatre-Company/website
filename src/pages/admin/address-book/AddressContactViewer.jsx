@@ -83,7 +83,7 @@ export function AddressContactViewer({contact: c, setEditing}) {
                     let addressString = addressArray.map((x,i) => `${x}${i===addressArray.length-1 ? '' : ', '}`)
                     return (
                       <div key={a.uid} className='flex items-end gap-2'>
-                        <p title='Click to copy' onClick={() => copyLink(addressString)} className='text-[#74b9ff] flex-nowrap overflow-hidden text-ellipsis hover:underline cursor-copy'>{addressString}</p>
+                        <p title='Click to copy' onClick={() => copyLink(addressString)} className='text-[#74b9ff] text-nowrap overflow-hidden text-ellipsis hover:underline cursor-copy'>{addressString}</p>
                         { a.label && <p className='text-[#aaa] mb-px text-sm shrink-0'>({a.label})</p> }
                       </div>
                     )
