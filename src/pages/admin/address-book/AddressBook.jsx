@@ -63,7 +63,7 @@ export function AddressBook() {
       {
         filteredContacts && 
         <> 
-          <div className='w-full flex justify-center'>
+          <div className='w-full flex justify-center pb-12'>
             <div className='w-full max-w-250 grid grid-cols-[30fr_1fr] gap-6 mb-4'>
               <div className='w-full bg-black px-4 py-2 border-white/20 border rounded-sm flex gap-4 items-center'>
                 <Search className='text-(--accent)' size={20} />
