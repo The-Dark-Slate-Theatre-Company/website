@@ -146,7 +146,7 @@ function SocialSection({c}) {
       }
       {
         c.social?.facebook.trim().length 
-        ? <a href={`https://facebook.com/${c.social.instagram}`} target='_blank'>
+        ? <a href={`https://facebook.com/${c.social.facebook}`} target='_blank'>
             <img className='mt-2 w-6 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' src={Facebook} />
           </a>
         : null
