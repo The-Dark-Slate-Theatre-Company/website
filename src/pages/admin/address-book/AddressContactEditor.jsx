@@ -405,7 +405,8 @@ const blankContact = {
   address: [],
   social: {
     instagram: '',
-    facebook: ''
+    facebook: '',
+    website: '',
   },
   photo: {
     url: null,

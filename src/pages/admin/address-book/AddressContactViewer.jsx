@@ -57,19 +57,21 @@ export function AddressContactViewer({contact: c, setEditing}) {
           c.tags.length 
           ? <>
               <hr className='mt-4 mb-2 opacity-20 md:hidden' />
-              <div className='w-full max-w-100 md:max-w-175 flex flex-wrap mt-2 md:mt-6 not-md:justify-center gap-x-4 gap-y-0.5 md:border-l-2 border-[#222] pl-4'>
-                {
-                  c.tags.map((t) => (
-                    <div 
-                      key={t} 
-                      style={{color: getTagColour(t)}}
-                      className='text-black text-xs md:text-sm rounded-full flex items-center gap-1 font-bold tracking-wide opacity-90'
-                    >
-                      <Tag size={15} />
-                      {GetTagName(t)}
-                    </div>
-                  ))
-                }
+              <div className='w-full flex not-md:justify-center'>
+                <div className='w-full max-w-100 md:max-w-175 flex flex-wrap mt-2 md:mt-6 not-md:justify-center gap-x-4 gap-y-0.5 md:border-l-2 border-[#222] md:pl-4'>
+                  {
+                    c.tags.map((t) => (
+                      <div 
+                        key={t} 
+                        style={{color: getTagColour(t)}}
+                        className='text-black text-xs md:text-sm rounded-full flex items-center gap-1 font-bold tracking-wide opacity-90'
+                      >
+                        <Tag size={15} />
+                        {GetTagName(t)}
+                      </div>
+                    ))
+                  }
+                </div>
               </div>
             </>
           : null
@@ -136,21 +138,21 @@ function SocialSection({c}) {
   return (
     <div className='flex gap-3 items-center'>
       {
-        c.social?.instagram !== '' 
+        c.social?.instagram.trim().length 
         ? <a href={`https://instagram.com/${c.social.instagram}`} target='_blank'>
             <img className='mt-2 w-6 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' src={Instagram} />
           </a>
         : null
       }
       {
-        c.social?.facebook !== '' 
+        c.social?.facebook.trim().length 
         ? <a href={`https://facebook.com/${c.social.instagram}`} target='_blank'>
             <img className='mt-2 w-6 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' src={Facebook} />
           </a>
         : null
       }
       {
-        c.social?.website !== '' 
+        c.social?.website.trim().length
         ? <a href={c.social.website} target='_blank'>
             <Globe size={26} className='mt-2 -ml-0.5 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' />
           </a>
