@@ -1,5 +1,8 @@
+import ContactTags from '../../../data/contact-tags/ContactTags.json';
+import './FilterMenuScrollbar.css';
+
 import { Mail, Phone, PlusCircle, Tag, User, X } from "lucide-react";
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { GetAllContactTypes, GetContactType } from "./GetContactType";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, Reorder, motion } from "motion/react";
@@ -11,6 +14,7 @@ import { SaveButton } from "../../../components/admin-save-button/SaveButton";
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { GetTagName } from './FilterMenu';
 
 
 
@@ -88,11 +92,13 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
     
     try {
       const photo = await ReplacePhoto(contact.photo, photoFile);
+      const sortedTags = [...c.tags].sort((a, b) => ContactTags.tags.indexOf(a) - ContactTags.tags.indexOf(b));
       const newContact = {
         ...c,
         uid,
         photo,
         search_index: searchIndex,
+        tags: sortedTags,
         first_name: c.type === 'individual' ? c.first_name : '',
         last_name: c.type === 'individual' ? c.last_name : '',
         org_name: c.type !== 'individual' ? c.org_name : '',
@@ -111,6 +117,7 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
       if(deleteOldContact || !contact.uid) navigate(`/admin/address-book/${uid}`)
       else forceRefresh();
 
+      setC(newContact);
       setEdited(false);
       setSaved(true);
     }
@@ -157,6 +164,7 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
     setPhotoPreview(URL.createObjectURL(file));
     setEdited(true);
   }
+
 
   const updateField = (field, value) => {
     setC((prev) => ({
@@ -298,10 +306,21 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
                 <ContactInput label='Company Name' value={c.org_name} onChange={(e) => updateField('org_name', e.target.value)} placeholder='Dark Slate Theatre' />
               </div>
           }
-          <div className='grid grid-cols-2 gap-2 mt-2'>
+
+          <hr className='my-3 opacity-10' />
+
+          <div className='grid grid-cols-2 gap-2'>
             <ContactInput label='Instagram @' value={c.social.instagram} onChange={(e) => updateNestedField('social', 'instagram', e.target.value)} />
             <ContactInput label='Facebook @' value={c.social.facebook} onChange={(e) => updateNestedField('social', 'facebook', e.target.value)} />
           </div>
+          <div className='mt-2'>
+            <ContactInput label='Website URL' placeholder='https://www...' value={c.social.website} onChange={(e) => updateNestedField('social', 'website', e.target.value)} />
+          </div>
+
+          <hr className='my-3 opacity-10' />
+
+          <TagPicker tags={c.tags || []} updateField={updateField} />
+
           <hr className='my-3 opacity-10' />
 
           <div className='flex gap-4'>
@@ -393,6 +412,80 @@ const blankContact = {
     storage: null
   },
   type: 'individual',
+  tags: []
+}
+
+
+function TagPicker({tags: selectedTags, updateField}) {
+
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filteredTags = ContactTags.tags.filter(
+    tag => !selectedTags.includes(tag) && (!search.length || GetTagName(tag).toLowerCase().includes(search.trim().toLowerCase()))
+  );
+
+  const heightClass = open ? 'max-h-60' : 'max-h-0';
+
+  function addTag(tag) {
+    if(selectedTags.includes(tag)) return;
+    updateField('tags', [...selectedTags, tag]);
+    setSearch('');
+  }
+
+  function removeTag(tag) {
+    updateField('tags', selectedTags.filter((t) => t !== tag));
+  }
+
+  function getColour(tag) {
+    return Object.keys(ContactTags.special).includes(tag) ? ContactTags.special[tag].colour : '#95afc0';
+  }
+
+  return (
+    <div className='relative w-full'>
+      <p className='text-sm text-[#aaa] mb-0.5'>Tags:</p>
+
+      <div className='min-h-11 w-full flex flex-wrap gap-2 items-center bg-[#101010] border border-white/20 rounded-sm px-3 py-2 cursor-text'>
+        {
+          selectedTags.map((t) => (
+            <div 
+              key={t} 
+              style={{backgroundColor: getColour(t)}}
+              className='text-black text-sm px-2 py-1 rounded-full flex items-center gap-2 font-bold tracking-wide opacity-80'
+            >
+              <Tag size={15} />
+              {GetTagName(t)}
+              <X size={15} onClick={(e) => {e.stopPropagation(); removeTag(t)}} className='cursor-pointer' />
+            </div>
+          ))
+        }
+
+        <input 
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setOpen(false)}
+          className='text-[#aaa] text-sm placeholder:text-[#777] flex-1 min-w-60 h-full focus:text-white focus:placeholder:text-[#aaa] focus:outline-none'
+          placeholder={selectedTags.length ? 'Add another tag...' : 'Click to add tags...'}
+        />
+      </div>
+
+      {
+        open && (
+          <div className={`${heightClass} absolute grid md:grid-cols-2 xl:grid-cols-3 z-10 mt-2 w-full bg-[#101010] border border-white/20 rounded-sm p-2 max-h-60 overflow-y-auto filter-menu-scrollbar`}>
+            {
+              filteredTags.map((t) => (
+                <div key={t} onMouseDown={(e) => e.preventDefault()} onClick={() => addTag(t)} style={{color: getColour(t)}} className='px-3 py-2 text-sm hover:bg-white/10 cursor-pointer rounded-full'>
+                  {GetTagName(t)}
+                </div>
+              ))
+            }
+          </div>
+        )
+      }
+    </div>
+  )
+
 }
 
 
@@ -449,7 +542,6 @@ function CreateContactUID(c, reverseName=false) {
     .replace(/[^a-z0-9-]/g, "")
     .replace(/-+/g, "-");
 }
-
 
 
 async function ReplacePhoto(oldPhoto, newFile) {

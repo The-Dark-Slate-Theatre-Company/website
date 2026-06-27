@@ -1,0 +1,62 @@
+{
+  "groups": {
+
+    "performance": ["acting", "singing", "dance", "live-music"],
+    "design": ["set-design", "lighting-design", "sound-design", "music-composition", "projection-design", "costume-design", "hair-&-makeup-design", "props-design"],
+    "technical": ["lighting-technician", "sound-technician", "projection-technician", "rigging", "automation", "followspot"],
+    "stage": ["stage-management", "deputy-stage-management", "assistant-stage-management", "stage-technician"],
+    "coordination": ["intimacy-coordination", "fight-coordination"],
+    "marketing": ["marketing", "graphic-design", "photography", "videography"]
+
+  },
+
+  
+  "special": {
+    "the-unspoken": {"colour": "#ff7675"},
+    "london": {"colour": "#00b894"},
+    "manchester": {"colour": "#00b894"},
+    "york": {"colour": "#00b894"}
+  },
+
+
+  "tags": [
+    "acting",
+    "assistant-stage-management",
+    "automation",
+    "costume-design",
+    "dance",
+    "deputy-stage-management",
+    "directing",
+    "fight-coordination",
+    "followspot",
+    "graphic-design",
+    "hair-&-makeup-design",
+    "intimacy-coordination",
+    "lighting-design",
+    "lighting-technician",
+    "live-music",
+    "marketing",
+    "music-composition",
+    "photography",
+    "producing",
+    "production-management",
+    "projection-design",
+    "projection-technician",
+    "props-design",
+    "rigging",
+    "set-design",
+    "singing",
+    "sound-design",
+    "sound-technician",
+    "stage-management",
+    "stage-technician",
+    "videography",
+    "writing",
+
+    "london",
+    "manchester",
+    "york",
+
+    "the-unspoken"
+  ]
+}

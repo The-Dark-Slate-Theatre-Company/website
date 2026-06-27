@@ -68,11 +68,11 @@ export function GetContactType(id, iconSize=20) {
 
 
 
-export function GetAllContactTypes() {
+export function GetAllContactTypes(size) {
   const keys = ['individual', 'organisation', 'theatre', 'venue', 'equipment', 'press', 'other'];
 
   const types = keys.map((k) => {
-    const type = GetContactType(k, 20);
+    const type = GetContactType(k, size);
     return {uid: k, ...type}
   });
 

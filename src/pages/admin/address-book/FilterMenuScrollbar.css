@@ -1,0 +1,21 @@
+.filter-menu-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filter-menu-scrollbar::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+.filter-menu-scrollbar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 9999px;
+}
+
+.filter-menu-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.my-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #444 #050505;
+}

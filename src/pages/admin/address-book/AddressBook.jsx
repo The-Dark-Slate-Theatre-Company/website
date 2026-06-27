@@ -1,32 +1,50 @@
+import ContactTags from '../../../data/contact-tags/ContactTags.json';
+
 import { useEffect, useRef, useState } from "react"
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { DependentContent } from "../../../components/admin-dependent-content/DependentContent";
-import { Check, Filter, PlusCircle, Search, User } from "lucide-react";
+import { BookType, Check, Filter, PlusCircle, Search, Tag, Tags, User } from "lucide-react";
 import { GetAllContactTypes, GetContactType } from "./GetContactType";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { ref } from "firebase/storage";
+import { FilterMenu, GetTagName } from "./FilterMenu";
 
 
 export function AddressBook() {
 
   const [contacts, setContacts] = useState(null);
-
   const [filteredContacts, setFilteredContacts] = useState(null);
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState([]);
 
-  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
-  const typeFilterRef = useRef(null);
+  const [search, setSearch] = useState(() => sessionStorage.getItem('addressBook.search') || "");
+  const [typeFilter, setTypeFilter] = useState(() => JSON.parse(sessionStorage.getItem("addressBook.typeFilter") || "[]"));
+  const [tagFilter, setTagFilter] = useState(() => JSON.parse(sessionStorage.getItem("addressBook.tagFilter") || "[]"));
+
+  const [searchPlaceholder, setSearchPlaceholder] = useState('');
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const filterMenuRef = useRef(null);
 
   const navigate = useNavigate();
 
 
-  const toggleFilter = (id) => {
+  const toggleTypeFilter = (id) => {
     if(typeFilter.includes(id)) setTypeFilter((prev) => prev.filter(x => x !== id));
     else setTypeFilter((prev) => [...prev, id]);
   }
+
+
+  const toggleTagFilter = (id) => {
+    if(tagFilter.includes(id)) setTagFilter((prev) => prev.filter(x => x !== id));
+    else setTagFilter((prev) => [...tagFilter, id]);
+  }
+
+
+  useEffect(() => {
+    sessionStorage.setItem('addressBook.search', search);
+    sessionStorage.setItem('addressBook.typeFilter', JSON.stringify(typeFilter));
+    sessionStorage.setItem('addressBook.tagFilter', JSON.stringify(tagFilter));
+  }, [search, typeFilter, tagFilter]);
 
 
   useEffect(() => {
@@ -42,20 +60,20 @@ export function AddressBook() {
 
   // Apply search and filters
   useEffect(() => {
-    setFilteredContacts(filterContacts(contacts, search, typeFilter));
-  }, [contacts, search, typeFilter])
+    setFilteredContacts(filterContacts(contacts, search, typeFilter, tagFilter));
+  }, [contacts, search, typeFilter, tagFilter])
 
 
   // Handle clicking off TypeFilter menu
   useEffect(() => {
     function handleClick(e) {
-      if(typeFilterRef.current && !typeFilterRef.current.contains(e.target)) {
-        setTypeFilterOpen(false);
+      if(filterMenuRef.current && !filterMenuRef.current.contains(e.target)) {
+        setFilterMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, [])
+  }, []);
 
 
   return (
@@ -65,38 +83,52 @@ export function AddressBook() {
         <> 
           <div className='w-full flex justify-center'>
             <div className='w-full max-w-250 grid grid-cols-[30fr_1fr] gap-6 mb-4'>
-              <div className='w-full bg-black px-4 py-2 border-white/20 border rounded-sm flex gap-4 items-center'>
+              <div style={{
+                  borderBottomLeftRadius: (typeFilter.length || tagFilter.length) ? 0 : '4px',
+                  borderBottomRightRadius: (typeFilter.length || tagFilter.length) ? 0 : '4px',
+                }} 
+                className='relative w-full bg-black px-4 py-2 border-white/20 border rounded-t-sm flex gap-4 items-center'
+              >
                 <Search className='text-(--accent)' size={20} />
-                <input style={{paddingTop: search.trim().length ? '8px' : null, paddingBottom: search.trim().length ? '8px' : null}} className='w-full focus:outline-none focus:text-white not-focus:text-[#aaa] focus:py-2 transition-all' value={search} onChange={(e) => setSearch(e.target.value)} placeholder='search...' />
+                <input 
+                  style={{paddingTop: search.trim().length ? '8px' : null, paddingBottom: search.trim().length ? '8px' : null}} 
+                  className='w-full focus:outline-none focus:text-white not-focus:text-[#aaa] focus:py-2 transition-all' 
+                  value={search} onChange={(e) => setSearch(e.target.value)} 
+                  placeholder='search...'
+                />
+                <AnimatePresence>
+                  { (typeFilter.length || tagFilter.length)
+                    ? <motion.div 
+                        initial={{height: 0, opacity: 0}} animate={{height: 25, opacity: 1}} exit={{height: 0, opacity: 0}} transition={{duration: 0.2}}
+                        className='absolute w-[calc(100%+2px)] -left-px top-full mt-px px-4 py-1 bg-[#191919] border-white/20 border border-t-0 rounded-b-sm overflow-hidden'
+                      >
+                        <div className='w-full min-w-0 text-xs text-(--accent) flex items-center tracking-wide flex-nowrap overflow-hidden text-nowrap text-ellipsis'>
+                          {typeFilter.length ? <BookType size={16} className='shrink-0 mr-2' /> : null}
+                          <p>{typeFilter.map((t,i) => `${GetContactType(t).name}${i!==typeFilter.length-1?', ':''}`) }</p>
+                          {tagFilter.length ? <Tags size={16} style={{marginLeft: typeFilter.length ? '16px' : '0'}} className='shrink-0 mr-2' /> : null}
+                          <p>{tagFilter.map((t,i) => `${GetTagName(t)}${i!==tagFilter.length-1?', ':''}`)}</p>
+                        </div>
+                      </motion.div>
+                    : null
+                  }
+                </AnimatePresence>
               </div>
               <div className='flex items-center gap-4'>
                 <div className='relative'>
-                  <div title='Filters' style={{color: typeFilter.length ? 'black' : null, backgroundColor: typeFilter.length ? 'var(--accent)' : 'transparent'}} className='p-1 rounded-full relative text-[#aaa] hover:text-(--accent) transition-colors cursor-pointer'>
-                    <Filter onClick={() => setTypeFilterOpen(true)} size={20} />
+                  <div title='Filters' style={{color: (typeFilter.length || tagFilter.length) ? 'black' : null, backgroundColor: (typeFilter.length || tagFilter.length) ? 'var(--accent)' : 'transparent'}} className='p-1 rounded-full relative text-[#aaa] hover:text-(--accent) transition-colors cursor-pointer'>
+                    <Filter onClick={() => setFilterMenuOpen(true)} size={20} />
                   </div>
                   <AnimatePresence>
-                    { typeFilterOpen && 
-                      <motion.div ref={typeFilterRef} className='absolute w-60 left-0 -translate-x-4/5 bg-[#151515] rounded-sm drop-shadow-[0_-4px_4px_#000000aa] overflow-hidden' initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} transition={{duration: 0.1}}>
-                        <div onClick={() => setTypeFilter([])} className='hover:bg-[#252525] cursor-pointer transition-colors grid items-center gap-3 px-2 py-1.5 grid-cols-[1fr_5fr_1fr]'>
-                          <div/>
-                          <p>All</p>
-                          <div className='flex items-center justify-end'>
-                            {typeFilter.length === 0 ? <Check size={15} /> : null}
-                          </div>
-                        </div>
-                        <hr className='my-1 opacity-20'/>
-                        { GetAllContactTypes().map((t) => {
-                          const selected = typeFilter.includes(t.uid);
-                          return (
-                            <div onClick={() => toggleFilter(t.uid)} className='hover:bg-[#202020] cursor-pointer transition-colors grid items-center gap-3 px-2 py-1.5 grid-cols-[1fr_5fr_1fr]' style={{color: t.colour, fontWeight: selected ? '600' : null}}>
-                              {t.icon}
-                              <p>{t.name}</p>
-                              <div className='flex items-center justify-end text-white'>
-                                {selected ? <Check size={15} /> : null}
-                              </div>
-                            </div>
-                          )
-                        })}   
+                    { filterMenuOpen && 
+                      <motion.div ref={filterMenuRef} className='absolute w-60 left-0 -translate-x-4/5 bg-[#151515] rounded-sm drop-shadow-[0_-4px_4px_#000000aa] overflow-hidden' initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} transition={{duration: 0.1}}>
+                        <FilterMenu 
+                          typeFilter={typeFilter} 
+                          setTypeFilter={setTypeFilter} 
+                          toggleTypeFilter={toggleTypeFilter} 
+                          tagFilter={tagFilter}
+                          setTagFilter={setTagFilter}
+                          toggleTagFilter={toggleTagFilter}
+                        />
                       </motion.div>
                     }
                   </AnimatePresence>
@@ -135,7 +167,30 @@ export function AddressBook() {
                         ? <>{c.first_name} <b className='text-[#ccc]'>{c.last_name}</b></>
                         : <>{c.org_name.toLowerCase().startsWith('the ') ? 'The ' : ''}<b className='text-[#ccc]'>{c.org_name.replace(/^the\s+/i, '')}</b></>
                       }</p>
-                      <p className='text-[#777] not-md:hidden text-nowrap overflow-hidden text-ellipsis'>{c.company.name ?? ''}</p>
+                      {
+                        tagFilter.length 
+                        ? <div className='flex w-full gap-2 text-sm not-md:hidden'>
+                            {
+                              c.tags.filter(t => tagFilter.includes(t)).map((t, i) => {
+                                if(i>2) return null;
+                                return (
+                                  <div className='px-2 py-1 flex items-center gap-2 bg-[#202020] rounded-full text-nowrap overflow-hidden' style={{color: getTagColour(t)}}>
+                                    <Tag size={15} />
+                                    {GetTagName(t)}
+                                  </div>
+                                )
+                              })
+                            }
+                            {
+                              c.tags.filter(t => tagFilter.includes(t)).length > 3 
+                              ? <div className='px-2 py-1 flex items-center gap-2 bg-[#202020] rounded-full text-nowrap overflow-hidden'>
+                                  +{c.tags.filter(t => tagFilter.includes(t)).length - 3}
+                                </div>
+                              : null
+                            }
+                          </div>
+                        : <p className='text-[#777] not-md:hidden text-nowrap overflow-hidden text-ellipsis'>{c.company.name ?? ''}</p>
+                      }
                       <div title={type.name} style={{color: type.colour}} className='mr-2'>
                         { type.icon }
                       </div>
@@ -153,9 +208,11 @@ export function AddressBook() {
 
 
 
-function filterContacts(contacts, search, typeFilter) {
+function filterContacts(contacts, search, typeFilter, tagFilter) {
+  if(!contacts) return null;
+
   const s = search.trim().toLowerCase();
-  if(s.length === 0 && typeFilter.length === 0) return contacts;
+  if(s.length === 0 && typeFilter.length === 0 && tagFilter.length === 0) return contacts;
 
   function getRelevance(contact) {
     const fullName = contact.type === 'individual' ? `${contact.first_name} ${contact.last_name}` : contact.org_name
@@ -170,6 +227,12 @@ function filterContacts(contacts, search, typeFilter) {
 
   return contacts 
     .filter((contact) => typeFilter.length === 0 || typeFilter.includes(contact.type))
+    .filter((contact) => tagFilter.length === 0 || tagFilter.some(tag => contact.tags?.includes(tag)))
     .filter((contact) => getRelevance(contact) !== Infinity)
     .sort((a, b) => getRelevance(a) - getRelevance(b));
+}
+
+
+function getTagColour(tag) {
+  return Object.keys(ContactTags.special).includes(tag) ? ContactTags.special[tag].colour : '#95afc0';
 }

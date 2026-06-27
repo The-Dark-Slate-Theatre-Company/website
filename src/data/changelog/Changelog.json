@@ -1,4 +1,12 @@
 {
+  "0.3.1": {
+    "date": "27/06/2026",
+    "changes": [
+      "Contacts in the Address Book can now be assigned tags, allowing for more advanced filtering.",
+      "The Address Book can now link to individual / company websites.",
+      "Current search and filter parameters in the Address Book are retained while navigating the site."
+    ]
+  },
   "0.3.0": {
     "date": "26/06/2026",
     "changes": [

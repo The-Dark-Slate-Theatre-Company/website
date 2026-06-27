@@ -1,7 +1,10 @@
-import { SquarePen, User } from "lucide-react";
+import ContactTags from '../../../data/contact-tags/ContactTags.json';
+
+import { Globe, SquarePen, Tag, User, X } from "lucide-react";
 import { GetContactType } from "./GetContactType";
 import Instagram from '../../../assets/social-logos/instagram.svg';
 import Facebook from '../../../assets/social-logos/facebook.svg';
+import { GetTagName } from "./FilterMenu";
 
 
 export function AddressContactViewer({contact: c, setEditing}) {
@@ -43,10 +46,32 @@ export function AddressContactViewer({contact: c, setEditing}) {
           </div>
         </div>
         {
-          (c.social?.instagram.length || c.social?.facebook.length)
+          (c.social?.instagram.length || c.social?.facebook.length || c.social?.website.length)
           ? <div className='w-full flex justify-center mt-4 md:hidden'>
               <SocialSection c={c} />
             </div>
+          : null
+        }
+        
+        {
+          c.tags.length 
+          ? <>
+              <hr className='mt-4 mb-2 opacity-20 md:hidden' />
+              <div className='w-full max-w-100 md:max-w-175 flex flex-wrap mt-2 md:mt-6 not-md:justify-center gap-x-4 gap-y-0.5 md:border-l-2 border-[#222] pl-4'>
+                {
+                  c.tags.map((t) => (
+                    <div 
+                      key={t} 
+                      style={{color: getTagColour(t)}}
+                      className='text-black text-xs md:text-sm rounded-full flex items-center gap-1 font-bold tracking-wide opacity-90'
+                    >
+                      <Tag size={15} />
+                      {GetTagName(t)}
+                    </div>
+                  ))
+                }
+              </div>
+            </>
           : null
         }
 
@@ -102,6 +127,11 @@ export function AddressContactViewer({contact: c, setEditing}) {
 }
 
 
+function getTagColour(tag) {
+  return Object.keys(ContactTags.special).includes(tag) ? ContactTags.special[tag].colour : '#95afc0';
+}
+
+
 function SocialSection({c}) {
   return (
     <div className='flex gap-3 items-center'>
@@ -116,6 +146,13 @@ function SocialSection({c}) {
         c.social?.facebook !== '' 
         ? <a href={`https://facebook.com/${c.social.instagram}`} target='_blank'>
             <img className='mt-2 w-6 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' src={Facebook} />
+          </a>
+        : null
+      }
+      {
+        c.social?.website !== '' 
+        ? <a href={c.social.website} target='_blank'>
+            <Globe size={26} className='mt-2 -ml-0.5 opacity-60 hover:opacity-90 transition-opacity cursor-pointer' />
           </a>
         : null
       }
