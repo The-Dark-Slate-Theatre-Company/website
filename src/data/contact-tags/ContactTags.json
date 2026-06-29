@@ -5,26 +5,33 @@
     "design": ["set-design", "lighting-design", "sound-design", "music-composition", "projection-design", "costume-design", "hair-&-makeup-design", "props-design"],
     "technical": ["lighting-technician", "sound-technician", "projection-technician", "rigging", "automation", "followspot"],
     "stage": ["stage-management", "deputy-stage-management", "assistant-stage-management", "stage-technician"],
-    "coordination": ["intimacy-coordination", "fight-coordination"],
+    "coordination": ["dance-choreography", "intimacy-coordination", "movement-choreography", "fight-coordination"],
     "marketing": ["marketing", "graphic-design", "photography", "videography"]
 
   },
 
   
   "special": {
+    "company-green-list": {"colour": "#2ecc71"},
     "the-unspoken": {"colour": "#ff7675"},
     "london": {"colour": "#00b894"},
     "manchester": {"colour": "#00b894"},
-    "york": {"colour": "#00b894"}
+    "york": {"colour": "#00b894"},
+    "newcastle": {"colour": "#00b894"},
+    "birmingham": {"colour": "#00b894"},
+    "oxford": {"colour": "#00b894"}
   },
 
 
   "tags": [
+    "company-green-list",
+
     "acting",
     "assistant-stage-management",
     "automation",
     "costume-design",
     "dance",
+    "dance-choreography",
     "deputy-stage-management",
     "directing",
     "fight-coordination",
@@ -36,6 +43,7 @@
     "lighting-technician",
     "live-music",
     "marketing",
+    "movement-choreography",
     "music-composition",
     "photography",
     "producing",
@@ -53,8 +61,11 @@
     "videography",
     "writing",
 
+    "birmingham",
     "london",
     "manchester",
+    "newcastle",
+    "oxford",
     "york",
 
     "the-unspoken"

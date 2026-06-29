@@ -86,7 +86,7 @@ export function Resources() {
     <>
       <BackpageDescription>
         Resources are publicly available links to important documents.<br/>
-        These appear in the footer of the website's frontpages.
+        These appear in the footer of the website.
       </BackpageDescription>
 
       <DependentContent dependency={resources}>

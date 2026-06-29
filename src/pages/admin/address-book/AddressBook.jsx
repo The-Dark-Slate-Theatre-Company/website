@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { DependentContent } from "../../../components/admin-dependent-content/DependentContent";
-import { BookType, Check, Filter, PlusCircle, Search, Tag, Tags, User } from "lucide-react";
+import { BookType, Check, Filter, PlusCircle, Search, Tag, Tags, User, Users } from "lucide-react";
 import { GetAllContactTypes, GetContactType } from "./GetContactType";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
@@ -82,7 +82,13 @@ export function AddressBook() {
         filteredContacts && 
         <> 
           <div className='w-full flex justify-center'>
-            <div className='w-full max-w-250 grid grid-cols-[30fr_1fr] gap-6 mb-4'>
+            <div className='w-full max-w-250 grid grid-cols-[1fr_30fr_1fr] gap-6 mb-4'>
+              <div className='w-full flex items-center'>
+                <div className='flex gap-2 justify-center px-2.5 py-2 rounded-full text-[#999] items-center bg-[#101010]'>
+                  <Users size={20} />
+                  {filteredContacts.length}
+                </div>
+              </div>
               <div style={{
                   borderBottomLeftRadius: (typeFilter.length || tagFilter.length) ? 0 : '4px',
                   borderBottomRightRadius: (typeFilter.length || tagFilter.length) ? 0 : '4px',

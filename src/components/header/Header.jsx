@@ -49,6 +49,7 @@ export function Header() {
 
         <div className='flex items-center gap-12 not-md:hidden'>
           <NavOption to='/about'   page={page}>About</NavOption>
+          <NavOption to='/shows'   page={page}>Shows</NavOption>
           <NavOption to='/contact' page={page}>Contact</NavOption>
         </div>
 
@@ -74,6 +75,7 @@ export function Header() {
 
       <MobileNavMenu open={mobileNavOpen} setOpen={setMobileNavOpen}>
         <NavOption to='/about'>About</NavOption>
+        <NavOption to='/shows'>Shows</NavOption>
         <NavOption to='/contact'>Contact</NavOption>
       </MobileNavMenu>
     </>

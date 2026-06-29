@@ -22,7 +22,7 @@ export function ImageBanner({ src }) {
         <div className='absolute bottom-0 w-full h-full bg-linear-to-t from-black to-transparent' />
       </div>
 
-      <div className='h-15 md:h-60' />
+      <div className='h-15 md:h-65' />
     </>
   );
 }

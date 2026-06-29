@@ -7,6 +7,7 @@ import { useState } from "react";
 import { ImageBanner } from "../../components/image-banner/ImageBanner";
 
 import TopImage from '../../assets/images/contact.png';
+import { PageTitle } from "../../components/page-title/PageTitle";
 
 
 export function Contact() {
@@ -15,7 +16,7 @@ export function Contact() {
       <ImageBanner src={TopImage} />
     
       <Page>
-        <h1 className='text-4xl tracking-widest border-b border-[#555] pb-2 mb-8'>Get in Touch</h1>
+        <PageTitle>Get in Touch</PageTitle>
 
         <p className='text-lg tracking-wide'>
           Interested in working with us? Whether you're looking to collaborate on a production, discuss an upcoming event, or 

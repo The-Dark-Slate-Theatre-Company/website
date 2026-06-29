@@ -8,6 +8,7 @@ import { ImageBanner } from "../../components/image-banner/ImageBanner";
 
 import TopImage from '../../assets/images/about-us.png';
 import { TeamCard } from "./TeamCard";
+import { PageTitle } from "../../components/page-title/PageTitle";
 
 
 export function About() {
@@ -52,14 +53,14 @@ export function About() {
       <ImageBanner src={TopImage} />
 
       <Page>
-        <h1 className='text-4xl tracking-widest border-b border-[#555] pb-2 mb-8'>About Us</h1>
+        <PageTitle>About Us</PageTitle>
         <p className='text-lg tracking-wide'>
           Taking influence from film noir, German Expressionism, and immersive theatre, The Dark Slate Theatre Company creates original productions that focus on atmosphere, design, and world-building.<br/><br/>
           Founded in York in 2023, we are interested in stories that draw audiences into carefully crafted worlds where environment and narrative work hand in hand. From intimate character dramas to immersive experiences, our work explores the strange and the macabre, the broken yet lovable.<br/><br/>
           At the heart of the company is a highly collaborative approach to theatre-making. We work with performers, designers, and technicians of all backgrounds and experiences to create ambitious work that puts storytelling at its centre.
         </p>
 
-        <h1 className='text-4xl tracking-widest border-b border-[#555] pb-2 mt-20 mb-8'>Meet the Team</h1>
+        <PageTitle className='mt-20'>Meet the Team</PageTitle>
         <div className='w-full flex justify-center'>
           <div className='w-full lg:w-[90%] grid md:grid-cols-5 gap-3'>
             <TeamTile of={team['tm']} setSelected={setSelected} />
@@ -93,7 +94,7 @@ function TeamTile({of: member, setSelected}) {
           >
             <div className="absolute inset-0 bg-(--accent) origin-bottom scale-y-0 transition-transform duration-300 group-hover:scale-y-100" />
             <div className="relative z-10 flex flex-col items-center w-full">
-              <div className="z-10 w-full aspect-square max-w-60 mb-4">
+              <div className="z-10 w-full aspect-square max-w-50 mb-4">
                 {member.headshot.url ? (
                   <img src={member.headshot.url} className="w-full h-full object-cover rounded-sm group-hover:scale-90 transition-transform duration-250" />
                 ) : (

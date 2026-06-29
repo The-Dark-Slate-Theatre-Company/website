@@ -1,4 +1,11 @@
 {
+  "0.4.0": {
+    "date": "28/06/2026",
+    "changes": [
+      "'Shows' page added to frontpages, with backpage controls",
+      "Team bios are more readable on mobile."
+    ]
+  },
   "0.3.1": {
     "date": "27/06/2026",
     "changes": [
