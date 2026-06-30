@@ -1,0 +1,67 @@
+@keyframes fireGlow {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+
+@keyframes ash {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(200px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+
+@keyframes smoke {
+  0% {
+    transform: translateY(25vh) translateX(0) scale(var(--smoke-scale));
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 0.3;
+  }
+
+  20% {
+    opacity: 0;
+  }
+
+  100% {
+    transform:
+      translateY(-120vh)
+      translateX(var(--smoke-drift))
+      scale(calc(var(--smoke-scale) * 1.6));
+    opacity: 0;
+  }
+}
+
+
+.animate-fireGlow {
+  animation: fireGlow 5s ease-in-out infinite;
+}
+
+.animate-ash {
+  animation-name: ash;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.animate-smoke {
+  animation-name: smoke;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards;
+}

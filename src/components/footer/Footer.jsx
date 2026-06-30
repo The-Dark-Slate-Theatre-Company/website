@@ -25,7 +25,7 @@ export function Footer({resourcesOverride=null}) {
   }, [])
 
   return (
-    <div className='w-full border-t border-t-[#222] mt-8 flex flex-col items-center'>
+    <div className='w-full z-5 bg-black/60 border-t border-t-[#222] mt-8 flex flex-col items-center'>
 
       <div className='w-[90%] max-w-300 mt-8 flex justify-between gap-8 not-md:justify-center'>
         <div className='flex gap-4'>
