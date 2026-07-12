@@ -48,8 +48,8 @@ export function Footer({resourcesOverride=null}) {
       <div className='flex justify-center flex-wrap gap-1 md:hidden w-[50%] mt-6'>
         {
           resources.map((r, i) => 
-            <div className='flex gap-1'>
-              <a className='border-b text-xs text-start text-(--accent)' key={i} href={r.link} target='_blank'>{r.name}</a>
+            <div key={i} className='flex gap-1'>
+              <a className='border-b text-xs text-start text-(--accent)' href={r.link} target='_blank'>{r.name}</a>
               {(i !== resources.length - 1) && <p className='text-xs text-[#aaa]'>•</p>}
             </div>
           )

@@ -10,8 +10,8 @@ export function Header() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const page = location.pathname.split('/').pop() || '/';
-
+  const page = location.pathname;
+  
   const [scrolled, setScrolled] = useState(page !== "/");
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -29,8 +29,9 @@ export function Header() {
   }, [page]);
 
 
+  const bgColourClass = (page.startsWith('/shows')) ? 'bg-black/40 backdrop-blur-lg' : 'bg-black';
   const logoClass = scrolled ? 'tracking-widest opacity-100' : 'tracking-tighter opacity-0'
-  const bgClass = scrolled ? 'bg-[#000] border-(--accent) drop-shadow-[0_4px_8px_black]' : 'bg-transparent border-transparent'
+  const bgClass = scrolled ? `${bgColourClass} border-(--accent) drop-shadow-[0_4px_8px_black]` : 'bg-transparent border-transparent'
 
   const mobileNavIconBaseClass = 'transition-all duration-500 origin-right cursor-pointer hover:brightness-80'
   const mobileNavIconVariableClass = scrolled ? 'scale-100 text-(--accent) mr-5' : 'scale-150 text-[#ccc] mr-6'
@@ -74,9 +75,9 @@ export function Header() {
       </div>
 
       <MobileNavMenu open={mobileNavOpen} setOpen={setMobileNavOpen}>
-        <NavOption to='/about'>About</NavOption>
-        <NavOption to='/shows'>Shows</NavOption>
-        <NavOption to='/contact'>Contact</NavOption>
+        <NavOption to='/about'    page={page}>About</NavOption>
+        <NavOption to='/shows'    page={page}>Shows</NavOption>
+        <NavOption to='/contact'  page={page}>Contact</NavOption>
       </MobileNavMenu>
     </>
 
@@ -91,7 +92,7 @@ function NavOption({to, page, children}) {
 
   const navigate = useNavigate();
 
-  const selectedClass = (`/${page}` === to) ? 'text-(--accent) border-b border-(--accent)' : 'border-b border-transparent';
+  const selectedClass = (page.startsWith(to)) ? 'text-(--accent) border-b border-(--accent)' : 'border-b border-transparent';
 
   return (
     <div onClick={() => navigate(to)} className={`${selectedClass} md:mt-0.5 border-b text-2xl not-md:w-3/4 not-md:text-center not-md:p-4 not-md:border-(--accent) md:text-lg cursor-pointer hover:brightness-80 transition-all duration-200`}>

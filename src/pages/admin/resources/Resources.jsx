@@ -11,6 +11,7 @@ import { IconInput } from "../../../components/admin-draggable-list/IconInput";
 import { DraggableList } from "../../../components/admin-draggable-list/DraggableList";
 import { DraggableListItem } from "../../../components/admin-draggable-list/DraggableListItem";
 import { AddListItemButton } from "../../../components/admin-draggable-list/AddListItemButton";
+import { Uid10 } from "../../../components/uid-10/Uid10";
 
 
 export function Resources() {
@@ -66,7 +67,7 @@ export function Resources() {
   }
 
   const addResource = () => {
-    setResources((prev) => [...prev, {uid: Math.random().toString(36).substring(2, 12), name: '', link: ''}]);
+    setResources((prev) => [...prev, {uid: Uid10(), name: '', link: ''}]);
     setEdited(true);
   }
 

@@ -19,7 +19,9 @@
     "york": {"colour": "#00b894"},
     "newcastle": {"colour": "#00b894"},
     "birmingham": {"colour": "#00b894"},
-    "oxford": {"colour": "#00b894"}
+    "oxford": {"colour": "#00b894"},
+    "brighton": {"colour": "#00b894"},
+    "sheffield": {"colour": "#00b894"}
   },
 
 
@@ -62,10 +64,12 @@
     "writing",
 
     "birmingham",
+    "brighton",
     "london",
     "manchester",
     "newcastle",
     "oxford",
+    "sheffield",
     "york",
 
     "the-unspoken"

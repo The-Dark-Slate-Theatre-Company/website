@@ -1,0 +1,21 @@
+.show-page-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.show-page-scrollbar::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+.show-page-scrollbar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 9999px;
+}
+
+.show-page-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.my-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #444 #050505;
+}

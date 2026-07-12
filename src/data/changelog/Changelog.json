@@ -1,8 +1,9 @@
 {
   "0.4.0": {
-    "date": "28/06/2026",
+    "date": "12/07/2026",
     "changes": [
-      "'Shows' page added to frontpages, with backpage controls",
+      "Shows have been added to front-pages, with full backpage support.",
+      "During important edits, the navigation bar can be disabled with the padlock icon to prevent unintentional backwards navigation.",
       "Team bios are more readable on mobile."
     ]
   },

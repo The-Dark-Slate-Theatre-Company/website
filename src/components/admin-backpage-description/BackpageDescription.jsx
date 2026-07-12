@@ -7,7 +7,7 @@ export function BackpageDescription({children}) {
         <div className='w-12 shrink-0 aspect-square md:ml-2'>
           <img className='w-full object-cover opacity-50' src={QuestionMark} />
         </div>
-        <p className='italic text-white/40'>
+        <p className='italic text-white/40 not-md:text-xs'>
           {children}
         </p>
       </div>

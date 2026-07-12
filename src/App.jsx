@@ -15,6 +15,11 @@ import { Resources } from './pages/admin/resources/Resources'
 import { AddressBook } from './pages/admin/address-book/AddressBook'
 import { AddressContact } from './pages/admin/address-book/AddressContact'
 import { AddressContactEditor } from './pages/admin/address-book/AddressContactEditor'
+import { ShowViewer } from './pages/show-viewer/ShowViewer'
+import { ShowsAdmin } from './pages/admin/shows/ShowsAdmin'
+import { ShowEditor } from './pages/admin/shows/ShowEditor'
+import { ShowViewerLayout } from './layouts/ShowViewerLayout'
+import { ShowCredits } from './pages/show-credits/ShowCredits'
 
 function App() {
 
@@ -26,6 +31,10 @@ function App() {
         <Route index element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/shows' element={<Shows />} />
+        <Route element={<ShowViewerLayout />}>
+          <Route path='/shows/:showId/credits' element={<ShowCredits />} />
+          <Route path='/shows/:showId' element={<ShowViewer />} />
+        </Route>
         <Route path='/contact' element={<Contact />} />
       </Route>
 
@@ -42,6 +51,8 @@ function App() {
         <Route path='/admin/inbox/*' element={<MessageViewer />} />
         <Route path='/admin/my-bio' element={<Bio />} />
         <Route path='/admin/resources' element={<Resources />} />
+        <Route path='/admin/shows' element={<ShowsAdmin />} />
+        <Route path='/admin/shows/*' element={<ShowEditor />} />
       </Route>
 
     </Routes>

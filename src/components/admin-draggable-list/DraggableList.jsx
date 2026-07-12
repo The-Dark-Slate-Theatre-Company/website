@@ -7,7 +7,7 @@ export function DraggableList({values, onReorder, children}) {
       axis='y'
       values={values}
       onReorder={(e) => onReorder(e)}
-      className='flex flex-col gap-3'
+      className='flex flex-col gap-3 overflow-hidden'
     >
       {children}
     </Reorder.Group>

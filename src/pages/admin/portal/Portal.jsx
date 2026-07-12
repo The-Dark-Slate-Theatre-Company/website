@@ -2,7 +2,7 @@ import AddressBook from '../../../assets/graphics/admin-portal-icons/address-boo
 import MyBio from '../../../assets/graphics/admin-portal-icons/my-bio.png';
 import Inbox from '../../../assets/graphics/admin-portal-icons/inbox.png';
 import Inventory from '../../../assets/graphics/admin-portal-icons/inventory.png';
-import Productions from '../../../assets/graphics/admin-portal-icons/productions.png';
+import Shows from '../../../assets/graphics/admin-portal-icons/productions.png';
 import Resources from '../../../assets/graphics/admin-portal-icons/resources.png';
 import WebsiteChangelog from '../../../assets/graphics/admin-portal-icons/changelog.png';
 
@@ -22,6 +22,7 @@ export function Portal() {
       <TabCardSection label='Site Controls'>
         <TabCard label='My Bio' to='/my-bio' src={MyBio} />
         <TabCard label='Resources' to='/resources' src={Resources} />
+        <TabCard label='Shows' to='/shows' src={Shows} />
       </TabCardSection>
 
       <TabCardSection label='Other'>

@@ -15,6 +15,9 @@ import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "fireb
 import { db, storage } from "../../../firebase";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { GetTagName } from './FilterMenu';
+import { addListItem, deleteListItem, updateField, updateListItem, updateNestedField } from '../../../components/update-field/UpdateField';
+import { AdminInput } from '../../../components/admin-input/AdminInput';
+import { Slugify } from '../../../components/slugify/Slugify';
 
 
 
@@ -166,60 +169,6 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
   }
 
 
-  const updateField = (field, value) => {
-    setC((prev) => ({
-      ...prev,
-      [field]: value
-    }))
-    setEdited(true);
-  }
-
-  const updateNestedField = (parent, field, value) => {
-    setC((prev) => ({
-      ...prev,
-      [parent]: {
-        ...prev[parent],
-        [field]: value,
-      },
-    }));
-    setEdited(true);
-  }
-
-  const addListItem = (field, defaultValue) => {
-    setC((prev) => (
-      {
-        ...prev,
-        [field]: [...prev[field], defaultValue]
-      }
-    ))
-    setEdited(true);
-  }
-
-  const updateListItem = (field, id, value, nestedField='data') => {
-    setC((prev) => (
-      {
-        ...prev,
-        [field]: prev[field].map((item) => 
-          item.uid === id 
-          ? { ...item, [nestedField]: value }
-          : item
-        )
-      }
-    ));
-    setEdited(true);
-  }
-
-  const deleteListItem = (field, id) => {
-    setC((prev) => (
-      {
-        ...prev,
-        [field]: prev[field].filter((x) => x.uid !== id)
-      }
-    ))
-    setEdited(true);
-  }
-
-
   return (
     <>
       <AnimatePresence>
@@ -282,7 +231,7 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
           <p className='text-sm text-[#aaa] mb-0.5'>Contact Type:</p>
           <div className='grid grid-cols-[1fr_30fr] items-center gap-4'>
             <div className='w-11 h-11 p-1.5 flex justify-center items-center text-black rounded-full' style={{backgroundColor: type.colour}}>{type.icon}</div>
-            <select value={c.type} onChange={(e) => updateField('type', e.target.value)} className='bg-[#101010] text-lg px-3 py-2 rounded-sm border border-white/20 focus:outline-none focus:border-(--accent) transition-colors duration-100 cursor-pointer'>
+            <select value={c.type} onChange={(e) => updateField('type', e.target.value, setC, setEdited)} className='bg-[#101010] text-lg px-3 py-2 rounded-sm border border-white/20 focus:outline-none focus:border-(--accent) transition-colors duration-100 cursor-pointer'>
               { allTypes.map((t) => <option key={t.uid} value={t.uid}>{t.name}</option>) }
             </select>
           </div>
@@ -295,42 +244,42 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
             ?
               <div className='w-full flex flex-col gap-4'>
                 <div className='w-full grid grid-cols-2 gap-2 md:gap-y-5'>
-                  <ContactInput label='First Name' value={c.first_name} onChange={(e) => updateField('first_name', e.target.value)} placeholder='William' />
-                  <ContactInput label='Surname' value={c.last_name} onChange={(e) => updateField('last_name', e.target.value)} placeholder='Beneventi' />
+                  <AdminInput label='First Name' value={c.first_name} onChange={(e) => updateField('first_name', e.target.value, setC, setEdited)} placeholder='William' />
+                  <AdminInput label='Surname' value={c.last_name} onChange={(e) => updateField('last_name', e.target.value, setC, setEdited)} placeholder='Beneventi' />
                 </div>
-                <ContactInput label={`Company Name${c.company.role.trim().length ? '' : ' (optional)'}`} value={c.company.name} onChange={(e) => updateNestedField('company', 'name', e.target.value)} />
-                <ContactInput label='Company Role (optional)' value={c.company.role} onChange={(e) => updateNestedField('company', 'role', e.target.value)} />
+                <AdminInput label={`Company Name${c.company.role.trim().length ? '' : ' (optional)'}`} value={c.company.name} onChange={(e) => updateNestedField('company', 'name', e.target.value, setC, setEdited)} />
+                <AdminInput label='Company Role (optional)' value={c.company.role} onChange={(e) => updateNestedField('company', 'role', e.target.value, setC, setEdited)} />
               </div>
             :
               <div className='w-full'>
-                <ContactInput label='Company Name' value={c.org_name} onChange={(e) => updateField('org_name', e.target.value)} placeholder='Dark Slate Theatre' />
+                <AdminInput label='Company Name' value={c.org_name} onChange={(e) => updateField('org_name', e.target.value, setC, setEdited)} placeholder='Dark Slate Theatre' />
               </div>
           }
 
           <hr className='my-3 opacity-10' />
 
           <div className='grid grid-cols-2 gap-2'>
-            <ContactInput label='Instagram @' value={c.social.instagram} onChange={(e) => updateNestedField('social', 'instagram', e.target.value)} />
-            <ContactInput label='Facebook @' value={c.social.facebook} onChange={(e) => updateNestedField('social', 'facebook', e.target.value)} />
+            <AdminInput label='Instagram @' value={c.social.instagram} onChange={(e) => updateNestedField('social', 'instagram', e.target.value, setC, setEdited)} />
+            <AdminInput label='Facebook @' value={c.social.facebook} onChange={(e) => updateNestedField('social', 'facebook', e.target.value, setC, setEdited)} />
           </div>
           <div className='mt-2'>
-            <ContactInput label='Website URL' placeholder='https://www...' value={c.social.website} onChange={(e) => updateNestedField('social', 'website', e.target.value)} />
+            <AdminInput label='Website URL' placeholder='https://www...' value={c.social.website} onChange={(e) => updateNestedField('social', 'website', e.target.value, setC, setEdited)} />
           </div>
 
           <hr className='my-3 opacity-10' />
 
-          <TagPicker tags={c.tags || []} updateField={updateField} />
+          <TagPicker tags={c.tags || []} setC={setC} setEdited={setEdited} />
 
           <hr className='my-3 opacity-10' />
 
           <div className='flex gap-4'>
             <p className='text-sm text-[#aaa] -mb-1'>Notes:</p>
-            <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem('notes', {uid: CreateUID(), data: ''})} />
+            <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem('notes', {uid: CreateUID(), data: ''}, setC, setEdited)} />
           </div>
-          <DraggableList values={c.notes} onReorder={(e) => updateField('notes', e)} >
+          <DraggableList values={c.notes} onReorder={(e) => updateField('notes', e, setC, setEdited)} >
             {c.notes.map((n) => 
-              <DraggableListItem key={n.uid} value={n} onDelete={() => deleteListItem('notes', n.uid)}>
-                <IconlessInput value={n.data} onChange={(e) => updateListItem('notes', n.uid, e.target.value)} />
+              <DraggableListItem key={n.uid} value={n} onDelete={() => deleteListItem('notes', n.uid, setC, setEdited)}>
+                <IconlessInput value={n.data} onChange={(e) => updateListItem('notes', n.uid, 'data', e.target.value, setC, setEdited)} />
               </DraggableListItem>
             )}
           </DraggableList>
@@ -342,10 +291,8 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
             values={c.emails}
             icon={<Mail size={18} />}
             placeholder='Email'
-            updateField={updateField}
-            updateListItem={updateListItem}
-            addListItem={addListItem}
-            deleteListItem={deleteListItem}
+            setC={setC}
+            setEdited={setEdited}
           />
           <div className='mb-4' />
           <ListSection label='Phone Numbers'
@@ -353,28 +300,26 @@ export function AddressContactEditor({contact=blankContact, setEditing, forceRef
             values={c.phones}
             icon={<Phone size={18} />}
             placeholder='Phone Number'
-            updateField={updateField}
-            updateListItem={updateListItem}
-            addListItem={addListItem}
-            deleteListItem={deleteListItem}
+            setC={setC}
+            setEdited={setEdited}
           />
 
           <hr className='my-3 opacity-10' />
 
           <div className='flex gap-4'>
             <p className='text-sm text-[#aaa] -mb-1'>Address:</p>
-            <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem('address', {uid: CreateUID(), label: '', house_and_street: '', town_or_city: '', county_or_country: '', postcode: ''})} />
+            <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem('address', {uid: CreateUID(), label: '', house_and_street: '', town_or_city: '', county_or_country: '', postcode: ''}, setC, setEdited)} />
           </div>
-          <DraggableList values={c.address} onReorder={(e) => updateField('address', e)} >
+          <DraggableList values={c.address} onReorder={(e) => updateField('address', e, setC, setEdited)} >
             {c.address.map((a) => 
-              <DraggableListItem key={a.uid} value={a} onDelete={() => deleteListItem('address', a.uid)}>
+              <DraggableListItem key={a.uid} value={a} onDelete={() => deleteListItem('address', a.uid, setC, setEdited)}>
                 <div className='flex flex-col gap-1'>
-                  <IconlessInput placeholder='House & Street' value={a.house_and_street} onChange={(e) => updateListItem('address', a.uid, e.target.value, 'house_and_street')} />
-                  <IconlessInput placeholder='Town or City' value={a.town_or_city} onChange={(e) => updateListItem('address', a.uid, e.target.value, 'town_or_city')} />
-                  <IconlessInput placeholder='County or Country' value={a.county_or_country} onChange={(e) => updateListItem('address', a.uid, e.target.value, 'county_or_country')} />
-                  <IconlessInput placeholder='Postcode' value={a.postcode} onChange={(e) => updateListItem('address', a.uid, e.target.value, 'postcode')} />
+                  <IconlessInput placeholder='House & Street' value={a.house_and_street} onChange={(e) => updateListItem('address', a.uid, 'house_and_street', e.target.value, setC, setEdited)} />
+                  <IconlessInput placeholder='Town or City' value={a.town_or_city} onChange={(e) => updateListItem('address', a.uid, 'town_or_city', e.target.value, setC, setEdited)} />
+                  <IconlessInput placeholder='County or Country' value={a.county_or_country} onChange={(e) => updateListItem('address', a.uid, 'county_or_country', e.target.value, setC, setEdited)} />
+                  <IconlessInput placeholder='Postcode' value={a.postcode} onChange={(e) => updateListItem('address', a.uid, 'postcode', e.target.value, setC, setEdited)} />
                   <div className='w-full max-w-100 mt-2'>
-                    <IconInput icon={<Tag size={20} />} placeholder='Label (optional)' value={a.label} onChange={(e) => updateListItem('address', a.uid, e.target.value, 'label')} />
+                    <IconInput icon={<Tag size={20} />} placeholder='Label (optional)' value={a.label} onChange={(e) => updateListItem('address', a.uid, 'label', e.target.value, setC, setEdited)} />
                   </div>
                 </div>
               </DraggableListItem>
@@ -417,7 +362,7 @@ const blankContact = {
 }
 
 
-function TagPicker({tags: selectedTags, updateField}) {
+function TagPicker({tags: selectedTags, setC, setEdited}) {
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -430,12 +375,12 @@ function TagPicker({tags: selectedTags, updateField}) {
 
   function addTag(tag) {
     if(selectedTags.includes(tag)) return;
-    updateField('tags', [...selectedTags, tag]);
+    updateField('tags', [...selectedTags, tag], setC, setEdited);
     setSearch('');
   }
 
   function removeTag(tag) {
-    updateField('tags', selectedTags.filter((t) => t !== tag));
+    updateField('tags', selectedTags.filter((t) => t !== tag), setC, setEdited);
   }
 
   function getColour(tag) {
@@ -490,34 +435,24 @@ function TagPicker({tags: selectedTags, updateField}) {
 }
 
 
-function ListSection({label, field, values, icon, placeholder, updateField, updateListItem, addListItem, deleteListItem}) {
+function ListSection({label, field, values, icon, placeholder, setC, setEdited}) {
   return (
     <>
       <div className='flex gap-4'>
         <p className='text-sm text-[#aaa] -mb-1'>{label}:</p>
-        <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem(field, {uid: CreateUID(), label: '', data: ''})} />
+        <PlusCircle size={20} className='text-(--accent) hover:text-white cursor-pointer transition-colors' onClick={() => addListItem(field, {uid: CreateUID(), label: '', data: ''}, setC, setEdited)} />
       </div>
-      <DraggableList values={values} onReorder={(e) => updateField(field, e)} >
+      <DraggableList values={values} onReorder={(e) => updateField(field, e, setC, setEdited)} >
         {values.map((x) => 
-          <DraggableListItem key={x.uid} value={x} onDelete={() => deleteListItem(field, x.uid)}>
+          <DraggableListItem key={x.uid} value={x} onDelete={() => deleteListItem(field, x.uid, setC, setEdited)}>
             <div className='grid md:grid-cols-[3fr_2fr] lg:grid-cols-[3fr_1fr] gap-3'>
-              <IconInput icon={icon} placeholder={placeholder} value={x.data} onChange={(e) => updateListItem(field, x.uid, e.target.value)} />
-              <IconInput icon={<Tag size={18} />} placeholder='Label (optional)' value={x.label} onChange={(e) => updateListItem(field, x.uid, e.target.value, 'label')} />
+              <IconInput icon={icon} placeholder={placeholder} value={x.data} onChange={(e) => updateListItem(field, x.uid, 'data', e.target.value, setC, setEdited)} />
+              <IconInput icon={<Tag size={18} />} placeholder='Label (optional)' value={x.label} onChange={(e) => updateListItem(field, x.uid, 'label', e.target.value, setC, setEdited)} />
             </div>
           </DraggableListItem>
         )}
       </DraggableList>
     </>
-  )
-}
-
-
-function ContactInput({label, value, onChange, placeholder}) {
-  return (
-    <div className='w-full'>
-      <p className='text-sm text-[#aaa] mb-0.5'>{label}:</p>
-      <input value={value} onChange={onChange} placeholder={placeholder} className='w-full px-3 py-1 bg-[#101010] rounded-sm text-lg border border-white/20 focus:outline-none focus:border-(--accent)' />
-    </div>
   )
 }
 
@@ -535,13 +470,7 @@ function CreateContactUID(c, reverseName=false) {
   }
   else name = c.org_name.replace(/^the\s+/i, '');
 
-  console.log(name);
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-");
+  return Slugify(name.trim());
 }
 
 

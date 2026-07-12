@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Page } from "../../components/page/Page";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { AnimatePresence, motion } from "motion/react";
 import { FireAshBackground } from "./FireAshBackground";
+import { useTailwindScreen } from "../../components/tailwind-screen/TailwindScreen";
+import { ChevronsRight, MoveRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -14,11 +17,11 @@ export function Shows() {
 
   useEffect(() => {
     async function getShows() {
-      const docsRef = collection(db, 'shows');
+      const docsRef = query(collection(db, 'shows'), where('public', '==', true), orderBy('sorting_index', 'desc'));
       const snaps = await getDocs(docsRef);
       const data = snaps.docs.map(doc => doc.data());
-      setWhatsOn(data.filter((x) => {return !x.past}));
-      setPastShows(data.filter((x) => {return x.past}));
+      setWhatsOn(data.filter((x) => {return x.currently_showing}));
+      setPastShows(data.filter((x) => {return !x.currently_showing}));
     }
     getShows();
   }, []);
@@ -48,7 +51,7 @@ export function Shows() {
                     ? <WhatsOn shows={whatsOn} />
                     : null
                   }
-                  { (whatsOn.length && pastShows.length) ? <div className='h-8' /> : null }
+                  { (pastShows.length && whatsOn.length) ? <div className='h-16' /> : null }
                   {
                     pastShows.length 
                     ? <PastShows shows={pastShows} />
@@ -90,14 +93,10 @@ function PastShows({shows}) {
         Stories we've told. Worlds we've built.<br/>
         Thank you to the audiences, artists, and everyone who made them possible.
       </p>
-      <div className='w-full flex justify-center mt-10'>
+      <div className='w-full flex justify-center mt-10 mb-10'>
         <div className='flex gap-3 flex-wrap justify-center w-70 md:w-140 lg:w-210'>
         {
-          shows.map((s, i) => 
-            <div key={i} className='w-full border-2 border-(--accent) bg-black/80 rounded-sm md:max-w-[calc(50%-12px)] lg:max-w-[calc(33%-8px)]'>
-              <PastShowTile show={s} />
-            </div>
-          )
+          shows.map((s, i) => <PastShowTile key={i} show={s} /> )
         }
         </div>
       </div>
@@ -138,40 +137,124 @@ function PageSkeleton({override}) {
 }
 
 
-function WhatsOnTile({show: s}) {
-
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
-  const [logoLoaded, setLogoLoaded] = useState(false);
+export function WhatsOnTile({show: s, disabled=false}) {
 
   console.log(s);
+
+  const [loaded, setLoaded] = useState(false);
+  const navigate = useNavigate();
+
+  // Get the different images for different sizes of screen
+  const lgSrc = s.whats_on.photos.large.url?.length ? s.whats_on.photos.large.url : null;
+  const mdSrc = s.whats_on.photos.medium.url?.length ? s.whats_on.photos.medium.url : lgSrc;
+  const smSrc = s.whats_on.photos.small.url?.length ? s.whats_on.photos.small.url : mdSrc;
+
+  const dropShadowClass = loaded ? 'drop-shadow-[0_-5px_12px_#ffffff10]' : '';
+  const bottomBorderClass = s.whats_on.banner.length ? ' border-b-0' : 'rounded-b-sm border-b-2';
+
+  function WhatsOnImage({src, visibleClass}) {
+    if(src){
+      return (
+        <img 
+          src={src} 
+          loading='lazy' 
+          onLoad={() => requestAnimationFrame(() => setLoaded(true))} 
+          className={`
+            w-full h-full object-cover
+            transition-all duration-1000
+            ${loaded ? "opacity-100" : "opacity-0"}
+            group-hover:brightness-115
+            ${visibleClass}
+          `}
+        />
+      )
+    }
+    return <div className='bg-[#202020] w-full h-full object-cover' />
+  }
+
   return (
-    <div className='group relative w-full flex justify-center items-center aspect-7/8 sm:aspect-2/1 xl:aspect-3/1 border-2 border-black/50 rounded-sm bg-black/60 overflow-hidden drop-shadow-[0_0_12px_#ffffff0a]'>
-      <div className='absolute -z-10 w-full h-full bg-black animate-pulse' />
-      <img loading='lazy' onLoad={() => setBackgroundLoaded(true)} style={{opacity: (backgroundLoaded && logoLoaded) ? 1 : 0}} src={s.whats_on.photos.background.url} className='group-hover:brightness-120 transition-all duration-1000 w-full h-full object-cover' />
-      <img loading='lazy' onLoad={() => setLogoLoaded(true)} style={{opacity: (backgroundLoaded && logoLoaded) ? 1 : 0}} src={s.whats_on.photos.logo.url} className='absolute w-100 transition-opacity duration-1000' />
+    <div onClick={() => { if(!disabled) navigate(`/shows/${s.uid}`)} } className={`${dropShadowClass} group relative w-[90%] min-[1650px]:w-full bg-black/60 overflow-hidden cursor-pointer`}>
+      <div className={`${bottomBorderClass} w-full flex justify-center items-center aspect-7/8 sm:aspect-2/1 xl:aspect-2.5/1 border-2 border-black/50 group-hover:border-(--accent) rounded-t-sm transition-colors duration-250`}>
+        <WhatsOnImage src={lgSrc} visibleClass='not-xl:hidden' />
+        <WhatsOnImage src={mdSrc} visibleClass='not-sm:hidden xl:hidden' />
+        <WhatsOnImage src={smSrc} visibleClass='sm:hidden' />
+      </div>
+      {
+        s.whats_on.banner.length 
+        ? <div className='p-2 flex justify-center items-center transition-all duration-250 uppercase tracking-wider font-bold bg-(--accent) text-black rounded-b-sm'>
+            {s.whats_on.banner}
+            <div className='w-0 group-hover:w-8 overflow-hidden flex justify-end items-center opacity-0 group-hover:opacity-100 transition-all duration-400'>
+              <ChevronsRight className='shrink-0' />
+            </div>
+          </div>
+        : null
+      }
     </div>
   )
 }
 
 
-function PastShowTile({show: s}) {
+export function PastShowTile({show: s, disabled=false}) {
 
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
 
-  const startYear = s.run.first_performance.split('/')[2];
-  const endYear = s.run.last_performance.split('/')[2];
-  let productionYear = (
+  let startYear = Infinity;
+  let endYear = 0;
+  s.performances.forEach((p) => {
+    const from = parseInt(p.from.split('-')[0]);
+    const to = parseInt(p.to.split('-')[0]);
+    if(from < startYear) startYear = from;
+    if(to > endYear) endYear = to;
+  })
+
+  let productionYear;
+  if(startYear === Infinity) productionYear = null
+  else productionYear = (
     startYear === endYear ? startYear : `${startYear} - ${endYear}`
   );
 
+  const timeoutRef = useRef();
+
+  function handleMouseEnter() {
+    timeoutRef.current = setTimeout(() => setExpanded(true), 300);
+  }
+
+  function handleMouseLeave() {
+    clearTimeout(timeoutRef.current);
+    setExpanded(false);
+  }
+
   return (
-    <div className='group cursor-pointer flex flex-col items-center p-1.5'>
-      <div className='relative w-full rounded-xs aspect-7/8 overflow-hidden flex justify-center items-center'>
-        <div className='absolute -z-10 w-full h-full bg-[#101010] animate-pulse' />
-        <img loading='lazy' onLoad={() => setThumbnailLoaded(true)} style={{opacity: thumbnailLoaded ? 1 : 0}} className='group-hover:brightness-120 transition-all duration-1000 w-full h-full object-cover' src={s.photos.thumbnail.url} />
+    <div className='relative min-h-93 w-full md:max-w-[calc(50%-12px)] lg:max-w-[calc(33%-8px)]'>
+      <div 
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => { if(!disabled) navigate(`/shows/${s.uid}`) }}
+        className={`absolute w-full border-2 border-(--accent) bg-black/60 backdrop-blur-xs rounded-sm drop-shadow-none hover:scale-105 hover:drop-shadow-[0_12px_10px_#000000aa] hover:bg-black transition-all duration-500`}
+      >
+        <div className='group cursor-pointer flex flex-col items-center p-1.5'>
+          <div className='relative w-full rounded-xs aspect-7/8 overflow-hidden flex justify-center items-center'>
+            <div className='absolute -z-10 w-full h-full bg-[#101010] animate-pulse' />
+            { s.past_show.thumbnail.url
+              ? <img loading='lazy' onLoad={() => setThumbnailLoaded(true)} style={{opacity: thumbnailLoaded ? 1 : 0}} className='group-hover:brightness-120 transition-all duration-1000 w-full h-full object-cover' src={s.past_show.thumbnail.url} />
+              : <div className='w-full h-full object-cover bg-[#151515]' />
+            }
+          </div>
+          <h1 className='text-xl uppercase tracking-wide border-b border-transparent mb-0.5 mt-2 group-hover:text-(--accent) group-hover:border-b-(--accent) transition-all duration-400'>{s.name}</h1>
+          {productionYear
+            ? <p className='text-sm tracking-widest text-(--accent) mb-2'>{productionYear}</p>
+            : <div className='mb-7' />
+          }
+          
+          <div className={`overflow-hidden text-sm text-[#ccc] px-2 text-center transition-all ease-in-out ${
+            expanded ? 'max-h-40 opacity-100 pb-2 duration-1000' : 'max-h-0 opacity-0 duration-500'
+          }`}>
+            {s.past_show.short_description}
+          </div>
+        </div>
       </div>
-      <h1 className='text-xl uppercase tracking-wide border-b border-transparent mb-0.5 mt-2 group-hover:text-(--accent) group-hover:border-b-(--accent) transition-all duration-400'>{s.name}</h1>
-      <p className='text-sm tracking-widest text-(--accent) mb-2'>{productionYear}</p>
     </div>
   )
 }
